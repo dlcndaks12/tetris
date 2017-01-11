@@ -1,0 +1,70 @@
+@charset "UTF-8";
+
+/* RESET */
+*,
+*:before,
+*:after {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+ul,
+ol {
+    list-style: none;
+}
+img {
+    border: 0;
+    vertical-align: middle;
+}
+button {
+    margin: 0;
+    padding: 0;
+    border: 0;
+    background: none;
+    cursor: pointer;
+    font-family: $font-square;
+}
+
+/* DEFAULT-STYLE */
+body {
+    overflow-x: hidden;
+    overflow-y: scroll;
+    color: #909cb1;
+    font-size: 13px;
+    line-height: 1.5;
+    font-family: $font-square;
+    -webkit-text-size-adjust: 100%;
+    -ms-text-size-adjust: 100%;
+    width:100%;
+}
+a {
+    color: inherit;
+    text-decoration: none;
+}
+
+/* FUNCTIONAL CLASS */
+.hidden {
+    overflow: hidden;
+    position: fixed;
+    top: -9999px;
+    left: -9999px;
+    width: 10px;
+    height: 25px;
+}
+
+/* FORM */
+input[type="text"],
+input[type="password"],
+textarea,
+select,
+input[type="checkbox"] + label,
+input[type="radio"] + label{
+    border-radius: 0;
+    color: #909cb1;
+    font: 13px/1.5 $font-square;
+    vertical-align: middle;
+}
+
+em {
+    font-style: normal;
+}
