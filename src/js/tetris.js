@@ -6,12 +6,18 @@ $(document).on('click', '.btn-start', function() {
 
 var current;
 var interval = 1000;
-var blockSize = 40;
+var blockSize = 35;
 var container = new Array(10);
+var fixItem = [];
 var $container;
 var $block = $('<div />', {
     class: 'block'
 });
+
+function getRandom() {
+    var idx = Math.ceil(Math.random() * 7 - 1);
+    return idx;
+}
 
 function init() {
     $container = $('.tetris-container');
@@ -30,22 +36,44 @@ function init() {
 function startGame() {
     init();
 
-    current = new Items(0);
-
+    current = new Items(getRandom());
     render(current.getPosition());
-    /*setInterval(function() {
 
+    /*setInterval(function() {
+        current.move(2);
+        render(current.getPosition());
     }, interval);*/
 }
 
-function render(item) {
+function endPosition() {
+    /* 끝에 도달한 블럭의 위치값을 저장시킨다. */
+    var endBlock = current.getPosition();
+    for(var i in endBlock) {
+        fixItem.push(endBlock[i]);
+    }
+
+    var random = getRandom();
+    current = new Items(random);
+}
+
+function render(current) {
+    $container.empty();
+
     for(var x in container) {
         for(var y in container[x]) {
+            for(var i in fixItem) {
+                if(fixItem[i][0] == x && fixItem[i][1] == y) {
+                    $block.css({
+                        left: x * blockSize + 'px',
+                        top: y * blockSize + 'px'
+                    });
 
-            for(var i=0; i < item.length; i++) {
-                if(item[i][0] == x && item[i][1] == y) {
-                    console.log('X,Y 맞음 : ' + x + ',' + y);
+                    $container.append($block.clone());
+                }
+            }
 
+            for(var i=0; i < current.length; i++) {
+                if(current[i][0] == x && current[i][1] == y) {
                     $block.css({
                         left: x * blockSize + 'px',
                         top: y * blockSize + 'px'
@@ -58,12 +86,20 @@ function render(item) {
     }
 }
 
-$(document).on('click', 'body', function() {
-    current.move();
+$(document).on('keydown', 'body', function(e) {
+    var keyCode = e.keyCode;
 
-    console.log(current);
+    if(keyCode == 37) {
+        current.move(0);
+    }else if(keyCode == 38) {
+        current.rotate();
+    }else if(keyCode == 39) {
+        current.move(1);
+    }else if(keyCode == 40) {
+        current.move(2)
+    }
 
-    render(current);
+    render(current.getPosition());
 });
 
 $(document).ready(function() {
