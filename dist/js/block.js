@@ -125,20 +125,31 @@ var Items = function(num) {
             }
         },
         move: function(direction) {
-            if (this.crushCheck(direction)) {
-                switch (direction) {
-                  case 0:
-                    this.moveLeft();
-                    break;
-
-                  case 1:
-                    this.moveRight();
-                    break;
-
-                  case 2:
-                    this.moveBottom();
-                    break;
+            /*if(this.crushCheck(direction)) {
+                switch(direction) {
+                    case 0:
+                        this.moveLeft();
+                        break;
+                    case 1:
+                        this.moveRight();
+                        break;
+                    case 2:
+                        this.moveBottom();
+                        break;
                 }
+            }*/
+            switch (direction) {
+              case 0:
+                this.moveLeft();
+                break;
+
+              case 1:
+                this.moveRight();
+                break;
+
+              case 2:
+                this.moveBottom();
+                break;
             }
         }
     };
