@@ -217,9 +217,25 @@ var Items = function(num) {
                     block[i][j][1]++;
                 }
             }
+
+            var testBlock = block[blockDirection];
+
+            for(var i=0; i < testBlock.length; i++) {
+                for(var i in fixItem) {
+                    //console.log(fixItem[i]);
+                }
+
+                if(testBlock[i][0] == 1 && testBlock[i][1] == 2) {
+
+                }
+            }
+
+            for(var i in fixItem) {
+                //console.log(fixItem[i]);
+            }
         },
         move: function(direction) {
-            /*if(this.crushCheck(direction)) {
+            if(this.crushCheck(direction)) {
                 switch(direction) {
                     case 0:
                         this.moveLeft();
@@ -231,9 +247,9 @@ var Items = function(num) {
                         this.moveBottom();
                         break;
                 }
-            }*/
+            }
 
-            switch(direction) {
+            /*switch(direction) {
                 case 0:
                     this.moveLeft();
                     break;
@@ -243,7 +259,7 @@ var Items = function(num) {
                 case 2:
                     this.moveBottom();
                     break;
-            }
+            }*/
         }
     }
 };

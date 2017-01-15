@@ -86,7 +86,7 @@ function render(current) {
     }
 }
 
-function crushCheck(direction) {
+/*function crushCheck(direction) {
     var testBlock = current.getPosition();
     var leftX = testBlock[0][0];
     var rightX = testBlock[testBlock.length-1][0];
@@ -101,8 +101,6 @@ function crushCheck(direction) {
         }
     }
 
-    console.log('ss');
-
     if(leftX == 0 && direction == 0) {
         return false;
     }else if(rightX == 9 && direction == 1) {
@@ -115,25 +113,19 @@ function crushCheck(direction) {
     }else{
         return true;
     }
-}
+}*/
 
 $(document).on('keydown', 'body', function(e) {
     var keyCode = e.keyCode;
 
     if(keyCode == 37) {
-        if(crushCheck(0)){
-            current.move(0);
-        }
+        current.move(0);
     }else if(keyCode == 38) {
         current.rotate();
     }else if(keyCode == 39) {
-        if(crushCheck(1)) {
-            current.move(1);
-        }
+        current.move(1);
     }else if(keyCode == 40) {
-        if(crushCheck(2)) {
-            current.move(2);
-        }
+        current.move(2);
     }
 
     render(current.getPosition());

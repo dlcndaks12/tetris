@@ -123,33 +123,28 @@ var Items = function(num) {
                     block[i][j][1]++;
                 }
             }
+            var testBlock = block[blockDirection];
+            for (var i = 0; i < testBlock.length; i++) {
+                for (var i in fixItem) {}
+                if (testBlock[i][0] == 1 && testBlock[i][1] == 2) {}
+            }
+            for (var i in fixItem) {}
         },
         move: function(direction) {
-            /*if(this.crushCheck(direction)) {
-                switch(direction) {
-                    case 0:
-                        this.moveLeft();
-                        break;
-                    case 1:
-                        this.moveRight();
-                        break;
-                    case 2:
-                        this.moveBottom();
-                        break;
+            if (this.crushCheck(direction)) {
+                switch (direction) {
+                  case 0:
+                    this.moveLeft();
+                    break;
+
+                  case 1:
+                    this.moveRight();
+                    break;
+
+                  case 2:
+                    this.moveBottom();
+                    break;
                 }
-            }*/
-            switch (direction) {
-              case 0:
-                this.moveLeft();
-                break;
-
-              case 1:
-                this.moveRight();
-                break;
-
-              case 2:
-                this.moveBottom();
-                break;
             }
         }
     };

@@ -78,48 +78,44 @@ function render(current) {
     }
 }
 
-function crushCheck(direction) {
+/*function crushCheck(direction) {
     var testBlock = current.getPosition();
     var leftX = testBlock[0][0];
-    var rightX = testBlock[testBlock.length - 1][0];
-    var bottomY = testBlock[testBlock.length - 1][1];
-    for (var i in testBlock) {
-        if (leftX > testBlock[i][0]) {
+    var rightX = testBlock[testBlock.length-1][0];
+    var bottomY = testBlock[testBlock.length-1][1];
+
+    for(var i in testBlock) {
+        if(leftX > testBlock[i][0]) {
             leftX = testBlock[i][0];
         }
-        if (rightX < testBlock[i][0]) {
+        if(rightX < testBlock[i][0]) {
             rightX = testBlock[i][0];
         }
     }
-    console.log("ss");
-    if (leftX == 0 && direction == 0) {
+
+    if(leftX == 0 && direction == 0) {
         return false;
-    } else if (rightX == 9 && direction == 1) {
+    }else if(rightX == 9 && direction == 1) {
         return false;
-    } else if (bottomY >= 19 && direction == 2) {
+    }else if(bottomY >= 19 && direction == 2){
         endPosition();
         return false;
-    } else if (bottomY) {} else {
+    }else if(bottomY){
+
+    }else{
         return true;
     }
-}
-
+}*/
 $(document).on("keydown", "body", function(e) {
     var keyCode = e.keyCode;
     if (keyCode == 37) {
-        if (crushCheck(0)) {
-            current.move(0);
-        }
+        current.move(0);
     } else if (keyCode == 38) {
         current.rotate();
     } else if (keyCode == 39) {
-        if (crushCheck(1)) {
-            current.move(1);
-        }
+        current.move(1);
     } else if (keyCode == 40) {
-        if (crushCheck(2)) {
-            current.move(2);
-        }
+        current.move(2);
     }
     render(current.getPosition());
 });
