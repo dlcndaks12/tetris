@@ -4,8 +4,9 @@ $(document).on('click', '.btn-start', function() {
     startGame();
 });
 
+var refreshInterval;
 var current;
-var interval = 1000;
+var interval = 500;
 var blockSize = 35;
 var container = new Array(10);
 var fixItem = [];
@@ -21,6 +22,7 @@ function getRandom() {
 
 function init() {
     $container = $('.tetris-container');
+    fixItem = [];
 
     for(var x=0; x < container.length; x++) {
         container[x] = new Array(20);
@@ -33,16 +35,18 @@ function init() {
     }
 }
 
+function ingGame() {
+    current.move(2);
+    render(current);
+}
+
 function startGame() {
     init();
 
     current = new Items(getRandom());
-    render(current.getPosition());
 
-    /*setInterval(function() {
-        current.move(2);
-        render(current.getPosition());
-    }, interval);*/
+    //render(current);
+    refreshInterval = setInterval(ingGame, interval);
 }
 
 function endPosition() {
@@ -52,11 +56,74 @@ function endPosition() {
         fixItem.push(endBlock[i]);
     }
 
+    clearLine();
+
+    /* 종료 체크 */
+    if(current.getPosition()[1][1] < 1) {
+        clearInterval(refreshInterval);
+
+        if(confirm('game over \n 다시하시겠습니까?')) {
+            startGame();
+        }else{
+
+        }
+
+        return;
+    }
+
     var random = getRandom();
     current = new Items(random);
 }
 
+function clearLine() {
+    /* 한줄 지우기 */
+    for (var n=0; n<20; n++) {
+        var rowNum = n;
+        var row = [];
+        for(var i in fixItem) {
+            if(fixItem[i][1] == rowNum) {
+                row.push(fixItem[i]);
+            }
+        }
+        if(row.length == 10) {
+            deleteArray(fixItem, row);
+            arrange(row[0][1]);
+        }
+    }
+}
+
+function deleteArray(fixed, row) {
+    for(var i in fixed) {
+        var testBlock = fixed[i];
+
+        for(var j in row) {
+            var testRow = row[j];
+
+            if(testRow[0] == testBlock[0] && testRow[1] == testBlock[1]) {
+                fixItem.splice(i, 1);
+
+                deleteArray(fixed, row);
+                return;
+            }
+        }
+    }
+}
+
+function arrange(row) {
+    for(var i in fixItem) {
+        var testItem = fixItem[i][1];
+
+        if(testItem < row) {
+            testItem++;
+            if(testItem != 20) {
+                fixItem[i][1]++;
+            }
+        }
+    }
+}
+
 function render(current) {
+    var currentPosition = current.getPosition();
     $container.empty();
 
     for(var x in container) {
@@ -68,12 +135,13 @@ function render(current) {
                         top: y * blockSize + 'px'
                     });
 
+                    $block.addClass();
                     $container.append($block.clone());
                 }
             }
 
-            for(var i=0; i < current.length; i++) {
-                if(current[i][0] == x && current[i][1] == y) {
+            for(var i=0; i < currentPosition.length; i++) {
+                if(currentPosition[i][0] == x && currentPosition[i][1] == y) {
                     $block.css({
                         left: x * blockSize + 'px',
                         top: y * blockSize + 'px'
@@ -86,49 +154,27 @@ function render(current) {
     }
 }
 
-/*function crushCheck(direction) {
-    var testBlock = current.getPosition();
-    var leftX = testBlock[0][0];
-    var rightX = testBlock[testBlock.length-1][0];
-    var bottomY = testBlock[testBlock.length-1][1];
-
-    for(var i in testBlock) {
-        if(leftX > testBlock[i][0]) {
-            leftX = testBlock[i][0];
-        }
-        if(rightX < testBlock[i][0]) {
-            rightX = testBlock[i][0];
-        }
-    }
-
-    if(leftX == 0 && direction == 0) {
-        return false;
-    }else if(rightX == 9 && direction == 1) {
-        return false;
-    }else if(bottomY >= 19 && direction == 2){
-        endPosition();
-        return false;
-    }else if(bottomY){
-
-    }else{
-        return true;
-    }
-}*/
-
 $(document).on('keydown', 'body', function(e) {
     var keyCode = e.keyCode;
 
+    // left
     if(keyCode == 37) {
         current.move(0);
+    // top
     }else if(keyCode == 38) {
         current.rotate();
+    // right
     }else if(keyCode == 39) {
         current.move(1);
+    // bottom
     }else if(keyCode == 40) {
         current.move(2);
+    // space
+    }else if(keyCode == 32) {
+        current.move(22);
     }
 
-    render(current.getPosition());
+    render(current);
 });
 
 $(document).ready(function() {
