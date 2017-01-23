@@ -52,7 +52,11 @@ function startGame() {
 function endPosition() {
     /* 끝에 도달한 블럭의 위치값을 저장시킨다. */
     var endBlock = current.getPosition();
+
+
     for(var i in endBlock) {
+        endBlock[i][2] = current.getType();
+
         fixItem.push(endBlock[i]);
     }
 
@@ -122,12 +126,42 @@ function arrange(row) {
     }
 }
 
+function getBg(type) {
+    var bg = '#f00';
+
+    switch(type) {
+        case 0:
+            bg = '#ff0ff0';
+            break;
+        case 1:
+            bg = '#04ff40';
+            break;
+        case 2:
+            bg = '#55aaf0';
+            break;
+        case 3:
+            bg = '#ffdf64';
+            break;
+        case 4:
+            bg = '#a35fd0';
+            break;
+        case 5:
+            bg = '#c30a3a';
+            break;
+        case 6:
+            bg = '#23910f';
+            break;
+    }
+    return bg;
+}
+
 function render(current) {
     var currentPosition = current.getPosition();
     $container.empty();
 
     for(var x in container) {
         for(var y in container[x]) {
+
             for(var i in fixItem) {
                 if(fixItem[i][0] == x && fixItem[i][1] == y) {
                     $block.css({
@@ -136,7 +170,7 @@ function render(current) {
                     });
 
                     $block.addClass();
-                    $container.append($block.clone());
+                    $container.append($block.clone().css('background', getBg(fixItem[i][2])));
                 }
             }
 
@@ -147,7 +181,7 @@ function render(current) {
                         top: y * blockSize + 'px'
                     });
 
-                    $container.append($block.clone());
+                    $container.append($block.clone().css('background', getBg(current.getType())));
                 }
             }
         }
