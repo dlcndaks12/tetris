@@ -2,6 +2,7 @@
 
 html,
 body {
+    overflow: hidden;
     height: 100%;
     background-color: #110e2e;
 }
@@ -143,7 +144,9 @@ body {
         }
 
         .btn-area {
+            position: relative;
             margin-top: 40px;
+            white-space: nowrap;
         }
 
         .btn {
@@ -180,6 +183,75 @@ body {
                     transform-origin: 9px 11px;
                 }
             }
+        }
+    }
+}
+
+.save-wrap {
+    visibility: hidden;
+    opacity: 0;
+    position: fixed;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    z-index: 20000;
+    background: rgba(0,0,0,0.9);
+    transition: all .3s;
+
+    &.active {
+        visibility: visible;
+        opacity: 1;
+    }
+
+    .inner {
+        @include alignXY;
+        text-align: center;
+    }
+
+    .save-area {
+        width: 400px;
+        padding: 20px 0;
+        border-radius: 5px;
+        background-color: #ffdd50;
+
+        input {
+            display: block;
+            width: 300px;
+            margin: 0 auto;
+            padding: 10px;
+            border: 0;
+            outline: 0;
+            background-color: #ffdd50;
+            color: #333;
+            font-size: 26px;
+            text-align: center;
+        }
+    }
+
+    .btn {
+        display: inline-block;
+        position: relative;
+        top: 0;
+        width: 150px;
+        margin: 20px auto 0;
+        padding: 8px 0 8px 0;
+        border-radius: 3px;
+        box-shadow: 0 4px 0 #592652;
+        background-color: #ff0072;
+        color: #fff;
+        font-weight: 700;
+        font-size: 20px;
+        text-align: center;
+
+        + .btn {
+            margin-left: 20px;
+        }
+
+        &:active {
+            top: 5px;
+            box-shadow: none !important;
+            transition: all 250ms ease;
         }
     }
 }

@@ -19,6 +19,7 @@ function getRandom() {
 
 function init() {
     $container = $('.tetris-container');
+    $container.empty();
     fixItem = [];
 
     for(var x=0; x < container.length; x++) {
@@ -252,9 +253,7 @@ $(document).on('click', '.start-area a, .btn.replay', function() {
 });
 
 $(document).on('click', '.btn.save', function() {
-    var id = prompt("이름을 입력하세요");
-
-    
+    $('.save-wrap').addClass('active');
 
     console.log(id);
 });
