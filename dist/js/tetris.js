@@ -1,15 +1,16 @@
-$(document).on("click", ".btn-start", function() {
-    $(this).fadeOut();
-    startGame();
-});
-
 var refreshInterval;
 
 var current;
 
+var score = 0;
+
+var ingCnt = 0;
+
+var nextItem;
+
 var interval = 500;
 
-var blockSize = 35;
+var blockSize = 30;
 
 var container = new Array(10);
 
@@ -45,10 +46,48 @@ function ingGame() {
 }
 
 function startGame() {
+    $(".gameover").hide();
+    $(".start-area").fadeOut();
+    $(".container").removeClass("blur");
     init();
     current = new Items(getRandom());
-    //render(current);
+    nextItem = getRandom();
+    renderNext(nextItem);
     refreshInterval = setInterval(ingGame, interval);
+}
+
+function gameOver() {
+    $(".gameover").show();
+    $(".gameover .score .num").text(score);
+    $(".container").addClass("blur");
+}
+
+function renderNext(nextItem) {
+    $(".next-block").text(nextItem);
+}
+
+function levelUp() {
+    ingCnt++;
+    if (ingCnt == 30) {
+        interval = 450;
+        clearInterval(refreshInterval);
+        refreshInterval = setInterval(ingGame, interval);
+    }
+    if (ingCnt == 60) {
+        interval = 400;
+        clearInterval(refreshInterval);
+        refreshInterval = setInterval(ingGame, interval);
+    }
+    if (ingCnt == 90) {
+        interval = 350;
+        clearInterval(refreshInterval);
+        refreshInterval = setInterval(ingGame, interval);
+    }
+    if (ingCnt == 120) {
+        interval = 300;
+        clearInterval(refreshInterval);
+        refreshInterval = setInterval(ingGame, interval);
+    }
 }
 
 function endPosition() {
@@ -59,16 +98,16 @@ function endPosition() {
         fixItem.push(endBlock[i]);
     }
     clearLine();
+    levelUp();
     /* 종료 체크 */
     if (current.getPosition()[1][1] < 1) {
         clearInterval(refreshInterval);
-        if (confirm("game over \n 다시하시겠습니까?")) {
-            startGame();
-        } else {}
+        gameOver();
         return;
     }
-    var random = getRandom();
-    current = new Items(random);
+    current = new Items(nextItem);
+    nextItem = getRandom();
+    renderNext(nextItem);
 }
 
 function clearLine() {
@@ -84,8 +123,10 @@ function clearLine() {
         if (row.length == 10) {
             deleteArray(fixItem, row);
             arrange(row[0][1]);
+            score += 100;
         }
     }
+    $(".score-area .num").text(score);
 }
 
 function deleteArray(fixed, row) {
@@ -160,7 +201,7 @@ function render(current) {
                         top: y * blockSize + "px"
                     });
                     $block.addClass();
-                    $container.append($block.clone().css("background", getBg(fixItem[i][2])));
+                    $container.append($block.clone().attr("class", "block type" + fixItem[i][2]));
                 }
             }
             for (var i = 0; i < currentPosition.length; i++) {
@@ -169,7 +210,7 @@ function render(current) {
                         left: x * blockSize + "px",
                         top: y * blockSize + "px"
                     });
-                    $container.append($block.clone().css("background", getBg(current.getType())));
+                    $container.append($block.clone().attr("class", "block type" + current.getType()));
                 }
             }
         }
@@ -193,6 +234,11 @@ $(document).on("keydown", "body", function(e) {
     render(current);
 });
 
-$(document).ready(function() {
+$(document).on("click", ".start-area a, .btn.replay", function() {
     startGame();
+});
+
+$(document).on("click", ".btn.save", function() {
+    var id = prompt("이름을 입력하세요");
+    console.log(id);
 });
