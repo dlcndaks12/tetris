@@ -21,6 +21,8 @@ function init() {
     $container = $('.tetris-container');
     $container.empty();
     fixItem = [];
+    ingCnt = 0;
+    score = 0;
 
     for(var x=0; x < container.length; x++) {
         container[x] = new Array(20);
@@ -58,7 +60,8 @@ function gameOver() {
 }
 
 function renderNext(nextItem) {
-    $('.next-block').text(nextItem);
+    var img = '<img src="../images/item'+ nextItem +'.png">';
+    $('.next-block').html(img);
 }
 
 function levelUp() {

@@ -29,10 +29,7 @@ button {
 body {
     overflow-x: hidden;
     overflow-y: scroll;
-    color: #909cb1;
-    font-size: 13px;
     line-height: 1.5;
-    font-family: $font-square;
     -webkit-text-size-adjust: 100%;
     -ms-text-size-adjust: 100%;
     width:100%;
@@ -52,19 +49,25 @@ a {
     height: 25px;
 }
 
-/* FORM */
-input[type="text"],
-input[type="password"],
-textarea,
-select,
-input[type="checkbox"] + label,
-input[type="radio"] + label{
-    border-radius: 0;
-    color: #909cb1;
-    font: 13px/1.5 $font-square;
-    vertical-align: middle;
-}
-
 em {
     font-style: normal;
+}
+
+.tetris {
+    font-family: $font-square;
+    color: #909cb1;
+    font-size: 13px;
+
+    /* FORM */
+    input[type="text"],
+    input[type="password"],
+    textarea,
+    select,
+    input[type="checkbox"] + label,
+    input[type="radio"] + label{
+        border-radius: 0;
+        color: #909cb1;
+        font: 13px/1.5 $font-square;
+        vertical-align: middle;
+    }
 }

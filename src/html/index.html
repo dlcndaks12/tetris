@@ -6,9 +6,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <link rel="stylesheet" href="../css/lib.css">
-    <link rel="stylesheet" href="../css/base.css">
-    <link rel="stylesheet" href="../css/pages.css">
+    <link rel="stylesheet" href="../css/tetris.css">
     <script type="text/javascript" src="../js/lib/jquery-3.1.1.min.js"></script>
     <script type="text/javascript" src="../js/lib/slick.min.js"></script>
     <script type="text/javascript" src="../js/block.js"></script>
@@ -16,85 +14,87 @@
 </head>
 <body>
 
-<div class="container">
-    <h1 class="logo"><img src="../images/logo.png" alt=""></h1>
+<div class="tetris">
+    <div class="container">
+        <h1 class="logo"><img src="../images/logo.png" alt=""></h1>
 
-    <div class="tetris-area">
-        <div class="tetris-container">
+        <div class="tetris-area">
+            <div class="tetris-container">
 
-        </div>
+            </div>
 
-        <div class="next-area">
-            <div class="title">Next</div>
-            <div class="next-block">
+            <div class="next-area">
+                <div class="title">Next</div>
+                <div class="next-block">
 
+                </div>
+            </div>
+
+            <div class="score-area">
+                <div class="title">Score</div>
+                <div class="num">0</div>
+            </div>
+
+            <div class="ranking">
+                <div class="title">Ranking</div>
+                <ul>
+                    <li>
+                        <span class="num">1.</span>
+                        <span class="name">홍길동</span>
+                        <span class="rscore">12400</span>
+                    </li>
+                    <li>
+                        <span class="num">2.</span>
+                        <span class="name">삼식이</span>
+                        <span class="rscore">12400</span>
+                    </li>
+                    <li>
+                        <span class="num">2.</span>
+                        <span class="name">삼식이</span>
+                        <span class="rscore">12400</span>
+                    </li>
+                    <li>
+                        <span class="num">2.</span>
+                        <span class="name">삼식이</span>
+                        <span class="rscore">12400</span>
+                    </li>
+                    <li>
+                        <span class="num">2.</span>
+                        <span class="name">삼식이</span>
+                        <span class="rscore">12400</span>
+                    </li>
+                </ul>
+            </div>
+
+            <div class="start-area">
+                <p>게임을<br>시작해보세요!</p>
+                <a href="#">Start</a>
             </div>
         </div>
 
-        <div class="score-area">
-            <div class="title">Score</div>
-            <div class="num">0</div>
-        </div>
+        <div class="copy"><img src="../images/copy.png" alt=""></div>
+    </div>
 
-        <div class="ranking">
-            <div class="title">Ranking</div>
-            <ul>
-                <li>
-                    <span class="num">1.</span>
-                    <span class="name">홍길동</span>
-                    <span class="rscore">12400</span>
-                </li>
-                <li>
-                    <span class="num">2.</span>
-                    <span class="name">삼식이</span>
-                    <span class="rscore">12400</span>
-                </li>
-                <li>
-                    <span class="num">2.</span>
-                    <span class="name">삼식이</span>
-                    <span class="rscore">12400</span>
-                </li>
-                <li>
-                    <span class="num">2.</span>
-                    <span class="name">삼식이</span>
-                    <span class="rscore">12400</span>
-                </li>
-                <li>
-                    <span class="num">2.</span>
-                    <span class="name">삼식이</span>
-                    <span class="rscore">12400</span>
-                </li>
-            </ul>
-        </div>
-
-        <div class="start-area">
-            <p>게임을<br>시작해보세요!</p>
-            <a href="#">Start</a>
+    <div class="gameover">
+        <div class="inner">
+            <p>Game Over ㅠ_ㅠ</p>
+            <div class="score">
+                <span class="num">0</span>점
+            </div>
+            <div class="btn-area">
+                <a href="#" class="btn replay"><img src="../images/replay.png" alt="">Replay</a>
+                <a href="#" class="btn save">Save</a>
+            </div>
         </div>
     </div>
 
-    <div class="copy"><img src="../images/copy.png" alt=""></div>
-</div>
-
-<div class="gameover">
-    <div class="inner">
-        <p>Game Over ㅠ_ㅠ</p>
-        <div class="score">
-            <span class="num">0</span>점
+    <div class="save-wrap">
+        <div class="inner">
+            <div class="save-area">
+                <input type="text" id="id" name="id" placeholder="이름을 입력해주세요." />
+            </div>
+            <a href="#" class="btn">SUBMIT</a>
         </div>
-        <div class="btn-area">
-            <a href="#" class="btn replay"><img src="../images/replay.png" alt="">Replay</a>
-            <a href="#" class="btn save">Save</a>
-        </div>
-    </div>
-</div>
-
-<div class="save-wrap">
-    <div class="inner">
-        <div class="save-area">
-            <input type="text" id="id" name="id" placeholder="이름을 입력해주세요." />
-        </div>
-        <a href="#" class="btn">SUBMIT</a>
     </div>
 </div>
 

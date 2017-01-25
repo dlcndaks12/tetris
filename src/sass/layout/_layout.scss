@@ -54,13 +54,18 @@ body {
     right: -140px;
 
     .next-block {
+        position: relative;
         width: 120px;
         height: 120px;
         border-radius: 3px;
         background-color: #221e43;
 
         img {
-            @include alignXY;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) scale(0.5);
+            transform-origin: 50% 50%;
         }
     }
 }
@@ -202,11 +207,17 @@ body {
     &.active {
         visibility: visible;
         opacity: 1;
+
+        .inner {
+            margin-top: 0;
+        }
     }
 
     .inner {
         @include alignXY;
+        margin-top: -100px;
         text-align: center;
+        transition: all .3s;
     }
 
     .save-area {
@@ -335,37 +346,37 @@ body {
     background-color: skyblue;
 
     &.type0 {
-        background: url("#{$path}/block1.png") no-repeat;
+        background: url("#{$path}/block0.png") no-repeat;
         background-size: contain;
     }
 
     &.type1 {
-        background: url("#{$path}/block2.png") no-repeat;
+        background: url("#{$path}/block1.png") no-repeat;
         background-size: contain;
     }
 
     &.type2 {
-        background: url("#{$path}/block3.png") no-repeat;
+        background: url("#{$path}/block2.png") no-repeat;
         background-size: contain;
     }
 
     &.type3 {
-        background: url("#{$path}/block4.png") no-repeat;
+        background: url("#{$path}/block3.png") no-repeat;
         background-size: contain;
     }
 
     &.type4 {
-        background: url("#{$path}/block5.png") no-repeat;
+        background: url("#{$path}/block4.png") no-repeat;
         background-size: contain;
     }
 
     &.type5 {
-        background: url("#{$path}/block6.png") no-repeat;
+        background: url("#{$path}/block5.png") no-repeat;
         background-size: contain;
     }
 
     &.type6 {
-        background: url("#{$path}/block7.png") no-repeat;
+        background: url("#{$path}/block6.png") no-repeat;
         background-size: contain;
     }
 }
