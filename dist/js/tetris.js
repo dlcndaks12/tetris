@@ -49,6 +49,7 @@ function ingGame() {
 }
 
 function startGame() {
+    onKeydown();
     $(".gameover").hide();
     $(".start-area").fadeOut();
     $(".container").removeClass("blur");
@@ -61,12 +62,13 @@ function startGame() {
 
 function gameOver() {
     $(".gameover").show();
+    $(".gameover .save").show();
     $(".gameover .score .num").text(score);
     $(".container").addClass("blur");
 }
 
 function renderNext(nextItem) {
-    var img = '<img src="../images/item' + nextItem + '.png">';
+    var img = '<img src="resources/images/item' + nextItem + '.png">';
     $(".next-block").html(img);
 }
 
@@ -115,6 +117,7 @@ function endPosition() {
 }
 
 function clearLine() {
+    var lineCnt = 0;
     /* 한줄 지우기 */
     for (var n = 0; n < 20; n++) {
         var rowNum = n;
@@ -128,7 +131,11 @@ function clearLine() {
             deleteArray(fixItem, row);
             arrange(row[0][1]);
             score += 100;
+            lineCnt++;
         }
+    }
+    if (lineCnt > 1) {
+        score += (lineCnt - 1) * 100;
     }
     $(".score-area .num").text(score);
 }
@@ -221,22 +228,24 @@ function render(current) {
     }
 }
 
-$(document).on("keydown", "body", function(e) {
-    var keyCode = e.keyCode;
-    // left
-    if (keyCode == 37) {
-        current.move(0);
-    } else if (keyCode == 38) {
-        current.rotate();
-    } else if (keyCode == 39) {
-        current.move(1);
-    } else if (keyCode == 40) {
-        current.move(2);
-    } else if (keyCode == 32) {
-        current.move(22);
-    }
-    render(current);
-});
+function onKeydown() {
+    $("body").off().on("keydown", function(e) {
+        var keyCode = e.keyCode;
+        // left
+        if (keyCode == 37) {
+            current.move(0);
+        } else if (keyCode == 38) {
+            current.rotate();
+        } else if (keyCode == 39) {
+            current.move(1);
+        } else if (keyCode == 40) {
+            current.move(2);
+        } else if (keyCode == 32) {
+            current.move(22);
+        }
+        render(current);
+    });
+}
 
 $(document).on("click", ".start-area a, .btn.replay", function() {
     startGame();
