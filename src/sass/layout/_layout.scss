@@ -39,6 +39,7 @@ body {
 
 .tetris-area {
     @include alignXY;
+    overflow: hidden;
 }
 
 .title {

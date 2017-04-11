@@ -3,9 +3,8 @@ var current;
 var score = 0;
 var ingCnt = 0;
 var nextItem;
-var interval = 500;
+var interval = 300;
 var blockSize = 30;
-var container = new Array(10);
 var fixItem = [];
 var $container;
 var $block = $("<div />", {
@@ -23,14 +22,6 @@ function init() {
     fixItem = [];
     ingCnt = 0;
     score = 0;
-    for (var x = 0; x < container.length; x++) {
-        container[x] = new Array(20);
-    }
-    for (var i = 0; i < 10; i++) {
-        for (var y = 0; y < 20; y++) {
-            container[i][y] = 0;
-        }
-    }
 }
 
 function ingGame() {
@@ -67,22 +58,22 @@ function renderNext(nextItem) {
 function levelUp() {
     ingCnt++;
     if (ingCnt == 30) {
-        interval = 400;
-        clearInterval(refreshInterval);
-        refreshInterval = setInterval(ingGame, interval);
-    }
-    if (ingCnt == 60) {
-        interval = 300;
-        clearInterval(refreshInterval);
-        refreshInterval = setInterval(ingGame, interval);
-    }
-    if (ingCnt == 90) {
         interval = 250;
         clearInterval(refreshInterval);
         refreshInterval = setInterval(ingGame, interval);
     }
-    if (ingCnt == 120) {
+    if (ingCnt == 60) {
         interval = 200;
+        clearInterval(refreshInterval);
+        refreshInterval = setInterval(ingGame, interval);
+    }
+    if (ingCnt == 90) {
+        interval = 150;
+        clearInterval(refreshInterval);
+        refreshInterval = setInterval(ingGame, interval);
+    }
+    if (ingCnt == 120) {
+        interval = 100;
         clearInterval(refreshInterval);
         refreshInterval = setInterval(ingGame, interval);
     }
@@ -180,27 +171,23 @@ function render(current) {
     //현재 선택된 블럭
     var currentPosition = current.getPosition();
     $container.empty();
-    for (var x in container) {
-        for (var y in container[x]) {
-            for (var i in fixItem) {
-                if (fixItem[i][0] == x && fixItem[i][1] == y) {
-                    $block.css({
-                        left: x * blockSize + "px",
-                        top: y * blockSize + "px"
-                    });
-                    $container.append($block.clone().attr("class", "block type" + fixItem[i][2]));
-                }
-            }
-            for (var i = 0; i < currentPosition.length; i++) {
-                if (currentPosition[i][0] == x && currentPosition[i][1] == y) {
-                    $block.css({
-                        left: x * blockSize + "px",
-                        top: y * blockSize + "px"
-                    });
-                    $container.append($block.clone().attr("class", "block type" + current.getType()));
-                }
-            }
-        }
+    
+    //고정블럭 그리기
+    for (var i=0; i<fixItem.length; i++) {
+        $block.css({
+            left: fixItem[i][0] * blockSize + "px",
+            top: fixItem[i][1] * blockSize + "px"
+        });
+        $container.append($block.clone().attr("class", "block type" + fixItem[i][2]));
+    }
+
+    //현재블럭 그리기
+    for(var i=0; i<currentPosition.length; i++) {
+        $block.css({
+            left: currentPosition[i][0] * blockSize + "px",
+            top: currentPosition[i][1] * blockSize + "px"
+        });
+        $container.append($block.clone().attr("class", "block type" + current.getType()));
     }
 }
 
