@@ -3,8 +3,10 @@ var Items = function(num) {
     var x = 0;
     var y = 0;
     var block = new Array(4);
-    var blockDirection = 0;
+    //블럭모양
     var type = num;
+    //블럭의 현재 회전방향
+    var blockDirection = 0;
     var item = function() {
         switch (num) {
           case 0:
@@ -64,30 +66,6 @@ var Items = function(num) {
         getPosition: function() {
             return block[blockDirection];
         },
-        crushCheck: function(direction) {
-            var testBlock = this.getPosition();
-            var leftX = testBlock[0][0];
-            var rightX = testBlock[testBlock.length - 1][0];
-            var bottomY = testBlock[testBlock.length - 1][1];
-            for (var i in testBlock) {
-                if (leftX > testBlock[i][0]) {
-                    leftX = testBlock[i][0];
-                }
-                if (rightX < testBlock[i][0]) {
-                    rightX = testBlock[i][0];
-                }
-            }
-            if (leftX == 0 && direction == 0) {
-                return false;
-            } else if (rightX == 9 && direction == 1) {
-                return false;
-            } else if (bottomY >= 19 && direction == 2) {
-                endPosition();
-                return false;
-            } else {
-                return true;
-            }
-        },
         crushChk: function(direction) {
             var testBlock = block[blockDirection];
             var leftX = testBlock[0][0];
@@ -109,10 +87,6 @@ var Items = function(num) {
                 return;
             } else if (bottomY > 19 && direction == 2) {
                 this.moveTop();
-                endPosition();
-                return;
-            } else if (bottomY > 19 && direction == 22) {
-                this.moveTop();
                 bottomFlag = false;
                 endPosition();
                 return;
@@ -126,7 +100,7 @@ var Items = function(num) {
                         if (direction == 1) {
                             this.moveLeft();
                         }
-                        if (direction == 2 || direction == 22) {
+                        if (direction == 2) {
                             this.moveTop();
                             bottomFlag = false;
                             endPosition();
@@ -142,30 +116,55 @@ var Items = function(num) {
                 blockDirection = 0;
             }
             var testBlock = this.getPosition();
-            /* 회전시 충돌있으면 돌리기 */
+            /* 회전시 충돌있으면 회전하기 전으로 돌리기 */
             loop1: for (var i = 0; i < testBlock.length; i++) {
                 for (var j in fixItem) {
                     if (testBlock[i][0] == fixItem[j][0] && testBlock[i][1] == fixItem[j][1]) {
                         blockDirection--;
                         if (blockDirection == -1) {
-                            blockDirection = 4;
+                            blockDirection = 0;
                         }
-                        return;
+                        break loop1;
                     }
                 }
             }
-            /* 회전시 위치 조정 */
-            var leftX = testBlock[0][0];
-            var rightX = testBlock[testBlock.length - 1][0];
-            var adjustLeft = leftX;
-            while (adjustLeft < 0) {
-                this.moveRight();
-                adjustLeft = testBlock[0][0];
+            //회전시 위치 조정
+            //가장 왼쪽 블럭의 좌표
+            var leftX;
+            for (var i = 0; i < testBlock.length; i++) {
+                if (i == 0) {
+                    leftX = testBlock[i][0];
+                    continue;
+                }
+                if (testBlock[i][0] < leftX) {
+                    leftX = testBlock[i][0];
+                }
             }
-            var adjustRight = rightX;
-            while (adjustRight > 9) {
+            //가장 오른쪽 블럭의 좌표
+            var rightX;
+            for (var i = 0; i < testBlock.length; i++) {
+                if (i == 0) {
+                    rightX = testBlock[i][0];
+                    continue;
+                }
+                if (testBlock[i][0] > rightX) {
+                    rightX = testBlock[i][0];
+                }
+            }
+            while (leftX < 0) {
+                this.moveRight();
+                leftX++;
+            }
+            while (rightX > 9) {
                 this.moveLeft();
-                adjustRight = testBlock[testBlock.length - 1][0];
+                rightX--;
+            }
+        },
+        moveTop: function() {
+            for (var i in block) {
+                for (var j = 0; j < block[i].length; j++) {
+                    block[i][j][1]--;
+                }
             }
         },
         moveLeft: function() {
@@ -184,49 +183,17 @@ var Items = function(num) {
             }
             this.crushChk(1);
         },
-        moveTop: function() {
-            for (var i in block) {
-                for (var j = 0; j < block[i].length; j++) {
-                    block[i][j][1]--;
-                }
-            }
-        },
-        moveBottom: function(direction) {
+        moveBottom: function() {
             for (var i in block) {
                 for (var j = 0; j < block[i].length; j++) {
                     block[i][j][1]++;
                 }
             }
-            this.crushChk(direction);
+            this.crushChk(2);
         },
-        move: function(direction) {
-            //if(this.crushCheck(direction)) {
-            switch (direction) {
-              case 0:
-                this.moveLeft();
-                break;
-
-              case 1:
-                this.moveRight();
-                break;
-
-              case 2:
-                this.moveBottom(direction);
-                break;
-
-              case 22:
-                /*for(var i=0; i<10; i++) {
-                            console.log(bottomFlag);
-                            this.moveBottom(direction);
-
-                            if(bottomFlag == false) {
-                                break;
-                            }
-                        }*/
-                while (bottomFlag) {
-                    this.moveBottom(direction);
-                }
-                break;
+        moveEnd: function() {
+            while (bottomFlag) {
+                this.moveBottom();
             }
         }
     };

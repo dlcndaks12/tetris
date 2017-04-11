@@ -1,23 +1,13 @@
 var refreshInterval;
-
 var current;
-
 var score = 0;
-
 var ingCnt = 0;
-
 var nextItem;
-
 var interval = 500;
-
 var blockSize = 30;
-
 var container = new Array(10);
-
 var fixItem = [];
-
 var $container;
-
 var $block = $("<div />", {
     class: "block"
 });
@@ -44,7 +34,7 @@ function init() {
 }
 
 function ingGame() {
-    current.move(2);
+    current.moveBottom();
     render(current);
 }
 
@@ -67,58 +57,70 @@ function gameOver() {
     $(".container").addClass("blur");
 }
 
+//다음블럭
 function renderNext(nextItem) {
-    var img = '<img src="resources/images/item' + nextItem + '.png">';
+    var img = '<img src="../images/item' + nextItem + '.png">';
     $(".next-block").html(img);
 }
 
+//난이도 상승
 function levelUp() {
     ingCnt++;
     if (ingCnt == 30) {
-        interval = 450;
-        clearInterval(refreshInterval);
-        refreshInterval = setInterval(ingGame, interval);
-    }
-    if (ingCnt == 60) {
         interval = 400;
         clearInterval(refreshInterval);
         refreshInterval = setInterval(ingGame, interval);
     }
+    if (ingCnt == 60) {
+        interval = 300;
+        clearInterval(refreshInterval);
+        refreshInterval = setInterval(ingGame, interval);
+    }
     if (ingCnt == 90) {
-        interval = 350;
+        interval = 250;
         clearInterval(refreshInterval);
         refreshInterval = setInterval(ingGame, interval);
     }
     if (ingCnt == 120) {
-        interval = 300;
+        interval = 200;
         clearInterval(refreshInterval);
         refreshInterval = setInterval(ingGame, interval);
     }
 }
 
+//블럭의 움직임이 종료될때
 function endPosition() {
-    /* 끝에 도달한 블럭의 위치값을 저장시킨다. */
+    //끝에 도달한 블럭의 위치값을 저장시킨다.
     var endBlock = current.getPosition();
     for (var i in endBlock) {
+        //블럭의 모양을 배열에 저장한다. ( 렌더링할때 색깔을 다르게 주기위해서 )
         endBlock[i][2] = current.getType();
+
         fixItem.push(endBlock[i]);
     }
+    //라인클리어
     clearLine();
+
+    //난이도상승
     levelUp();
-    /* 종료 체크 */
+
+    //종료 체크
     if (current.getPosition()[1][1] < 1) {
         clearInterval(refreshInterval);
         gameOver();
         return;
     }
+    //블럭을 새로 생성한다.
     current = new Items(nextItem);
+
+    //다음블럭값 을 생성한다.
     nextItem = getRandom();
     renderNext(nextItem);
 }
 
+//라인클리어
 function clearLine() {
     var lineCnt = 0;
-    /* 한줄 지우기 */
     for (var n = 0; n < 20; n++) {
         var rowNum = n;
         var row = [];
@@ -127,19 +129,25 @@ function clearLine() {
                 row.push(fixItem[i]);
             }
         }
+
+        //한줄이 모두 채워졌을때
         if (row.length == 10) {
+            //고정된블럭 배열에서 채워진 한줄을 삭제한다.
             deleteArray(fixItem, row);
+            //한줄을 삭제후 빈행을 채운다. arrange(삭제된 행 번호)
             arrange(row[0][1]);
             score += 100;
             lineCnt++;
         }
     }
+    //지워진 줄수가 2개 이상일때 보너스 점수추가
     if(lineCnt > 1) {
         score += ((lineCnt-1) * 100);
     }
     $(".score-area .num").text(score);
 }
 
+//고정된블럭 배열에서 선택된 행 삭제
 function deleteArray(fixed, row) {
     for (var i in fixed) {
         var testBlock = fixed[i];
@@ -154,6 +162,7 @@ function deleteArray(fixed, row) {
     }
 }
 
+//삭제된 행의 빈자리를 채움
 function arrange(row) {
     for (var i in fixItem) {
         var testItem = fixItem[i][1];
@@ -166,41 +175,9 @@ function arrange(row) {
     }
 }
 
-function getBg(type) {
-    var bg = "#f00";
-    switch (type) {
-        case 0:
-            bg = "#ff0ff0";
-            break;
-
-        case 1:
-            bg = "#04ff40";
-            break;
-
-        case 2:
-            bg = "#55aaf0";
-            break;
-
-        case 3:
-            bg = "#ffdf64";
-            break;
-
-        case 4:
-            bg = "#a35fd0";
-            break;
-
-        case 5:
-            bg = "#c30a3a";
-            break;
-
-        case 6:
-            bg = "#23910f";
-            break;
-    }
-    return bg;
-}
-
+//고정된 블럭배열, 현재 선택된 블럭을 화면에 그림
 function render(current) {
+    //현재 선택된 블럭
     var currentPosition = current.getPosition();
     $container.empty();
     for (var x in container) {
@@ -211,7 +188,6 @@ function render(current) {
                         left: x * blockSize + "px",
                         top: y * blockSize + "px"
                     });
-                    $block.addClass();
                     $container.append($block.clone().attr("class", "block type" + fixItem[i][2]));
                 }
             }
@@ -228,20 +204,21 @@ function render(current) {
     }
 }
 
+//keydown 이벤트 bind
 function onKeydown() {
     $("body").off().on("keydown", function(e) {
         var keyCode = e.keyCode;
         // left
         if (keyCode == 37) {
-            current.move(0);
+            current.moveLeft();
         } else if (keyCode == 38) {
             current.rotate();
         } else if (keyCode == 39) {
-            current.move(1);
+            current.moveRight();
         } else if (keyCode == 40) {
-            current.move(2);
+            current.moveBottom();
         } else if (keyCode == 32) {
-            current.move(22);
+            current.moveEnd();
         }
         render(current);
     });
@@ -253,5 +230,4 @@ $(document).on("click", ".start-area a, .btn.replay", function() {
 
 $(document).on("click", ".btn.save", function() {
     $(".save-wrap").addClass("active");
-    console.log(id);
 });
