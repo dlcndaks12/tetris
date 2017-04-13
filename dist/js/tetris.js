@@ -1,6 +1,6 @@
 var refreshInterval;
 
-var current;
+var block;
 
 var score = 0;
 
@@ -20,11 +20,6 @@ var $block = $("<div />", {
     class: "block"
 });
 
-function getRandom() {
-    var idx = Math.ceil(Math.random() * 7 - 1);
-    return idx;
-}
-
 function init() {
     $container = $(".tetris-container");
     $container.empty();
@@ -33,21 +28,26 @@ function init() {
     score = 0;
 }
 
-function ingGame() {
-    current.moveBottom();
-    render(current);
+function getRandom() {
+    var idx = Math.ceil(Math.random() * 7 - 1);
+    return idx;
 }
 
 function startGame() {
-    onKeydown();
     $(".gameover").hide();
     $(".start-area").fadeOut();
     $(".container").removeClass("blur");
+    onKeydown();
     init();
-    current = new Items(getRandom());
+    block = new BlockItem(getRandom());
     nextItem = getRandom();
     renderNext(nextItem);
     refreshInterval = setInterval(ingGame, interval);
+}
+
+function ingGame() {
+    block.moveDown();
+    render(block);
 }
 
 function gameOver() {
@@ -58,8 +58,8 @@ function gameOver() {
 }
 
 //다음블럭
-function renderNext(nextItem) {
-    var img = '<img src="../images/item' + nextItem + '.png">';
+function renderNext(nextItemIdx) {
+    var img = '<img src="../images/item' + nextItemIdx + '.png">';
     $(".next-block").html(img);
 }
 
@@ -91,10 +91,10 @@ function levelUp() {
 //블럭의 움직임이 종료될때
 function endPosition() {
     //끝에 도달한 블럭의 위치값을 저장시킨다.
-    var endBlock = current.getPosition();
+    var endBlock = block.getCurrentBlock();
     for (var i in endBlock) {
         //블럭의 모양을 배열에 저장한다. ( 렌더링할때 색깔을 다르게 주기위해서 )
-        endBlock[i][2] = current.getType();
+        endBlock[i][2] = block.getType();
         fixItem.push(endBlock[i]);
     }
     //라인클리어
@@ -102,13 +102,13 @@ function endPosition() {
     //난이도상승
     levelUp();
     //종료 체크
-    if (current.getPosition()[1][1] < 1) {
+    if (block.getCurrentBlock()[1][1] < 1) {
         clearInterval(refreshInterval);
         gameOver();
-        return;
+        return false;
     }
     //블럭을 새로 생성한다.
-    current = new Items(nextItem);
+    block = new BlockItem(nextItem);
     //다음블럭값 을 생성한다.
     nextItem = getRandom();
     renderNext(nextItem);
@@ -171,9 +171,9 @@ function arrange(row) {
 }
 
 //고정된 블럭배열, 현재 선택된 블럭을 화면에 그림
-function render(current) {
+function render(block) {
     //현재 선택된 블럭
-    var currentPosition = current.getPosition();
+    var currentBlock = block.getCurrentBlock();
     $container.empty();
     //고정블럭 그리기
     for (var i = 0; i < fixItem.length; i++) {
@@ -184,12 +184,12 @@ function render(current) {
         $container.append($block.clone().attr("class", "block type" + fixItem[i][2]));
     }
     //현재블럭 그리기
-    for (var i = 0; i < currentPosition.length; i++) {
+    for (var i = 0; i < currentBlock.length; i++) {
         $block.css({
-            left: currentPosition[i][0] * blockSize + "px",
-            top: currentPosition[i][1] * blockSize + "px"
+            left: currentBlock[i][0] * blockSize + "px",
+            top: currentBlock[i][1] * blockSize + "px"
         });
-        $container.append($block.clone().attr("class", "block type" + current.getType()));
+        $container.append($block.clone().attr("class", "block type" + block.getType()));
     }
 }
 
@@ -197,19 +197,18 @@ function render(current) {
 function onKeydown() {
     $("body").off().on("keydown", function(e) {
         var keyCode = e.keyCode;
-        // left
         if (keyCode == 37) {
-            current.moveLeft();
+            block.moveLeft();
         } else if (keyCode == 38) {
-            current.rotate();
+            block.rotate();
         } else if (keyCode == 39) {
-            current.moveRight();
+            block.moveRight();
         } else if (keyCode == 40) {
-            current.moveBottom();
+            block.moveDown();
         } else if (keyCode == 32) {
-            current.moveEnd();
+            block.moveEnd();
         }
-        render(current);
+        render(block);
     });
 }
 

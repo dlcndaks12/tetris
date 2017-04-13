@@ -1,4 +1,4 @@
-var Items = function(num) {
+var BlockItem = function(num) {
     var bottomFlag = true;
     var block = new Array(4);
     //블럭형태 코드값
@@ -60,104 +60,10 @@ var Items = function(num) {
         getType: function() {
             return type;
         },
-        getPosition: function() {
+        getCurrentBlock: function() {
             return block[blockDirection];
         },
-        crushChk: function(direction) {
-            var testBlock = block[blockDirection];
-            var leftX = testBlock[0][0];
-            var rightX = testBlock[testBlock.length - 1][0];
-            var bottomY = testBlock[testBlock.length - 1][1];
-            for (var i in testBlock) {
-                if (leftX > testBlock[i][0]) {
-                    leftX = testBlock[i][0];
-                }
-                if (rightX < testBlock[i][0]) {
-                    rightX = testBlock[i][0];
-                }
-            }
-            if (leftX < 0 && direction == 0) {
-                this.moveRight();
-                return;
-            } else if (rightX > 9 && direction == 1) {
-                this.moveLeft();
-                return;
-            } else if (bottomY > 19 && direction == 2) {
-                this.moveTop();
-                bottomFlag = false;
-                endPosition();
-                return;
-            }
-            loop1: for (var i = 0; i < testBlock.length; i++) {
-                for (var j in fixItem) {
-                    if (testBlock[i][0] == fixItem[j][0] && testBlock[i][1] == fixItem[j][1]) {
-                        if (direction == 0) {
-                            this.moveRight();
-                        }
-                        if (direction == 1) {
-                            this.moveLeft();
-                        }
-                        if (direction == 2) {
-                            this.moveTop();
-                            bottomFlag = false;
-                            endPosition();
-                        }
-                        break loop1;
-                    }
-                }
-            }
-        },
-        rotate: function() {
-            blockDirection++;
-            if (blockDirection == 4) {
-                blockDirection = 0;
-            }
-            var testBlock = this.getPosition();
-            /* 회전시 충돌있으면 회전하기 전으로 돌리기 */
-            loop1: for (var i = 0; i < testBlock.length; i++) {
-                for (var j in fixItem) {
-                    if (testBlock[i][0] == fixItem[j][0] && testBlock[i][1] == fixItem[j][1]) {
-                        blockDirection--;
-                        if (blockDirection == -1) {
-                            blockDirection = 0;
-                        }
-                        break loop1;
-                    }
-                }
-            }
-            //회전시 위치 조정
-            //가장 왼쪽 블럭의 좌표
-            var leftX;
-            for (var i = 0; i < testBlock.length; i++) {
-                if (i == 0) {
-                    leftX = testBlock[i][0];
-                    continue;
-                }
-                if (testBlock[i][0] < leftX) {
-                    leftX = testBlock[i][0];
-                }
-            }
-            //가장 오른쪽 블럭의 좌표
-            var rightX;
-            for (var i = 0; i < testBlock.length; i++) {
-                if (i == 0) {
-                    rightX = testBlock[i][0];
-                    continue;
-                }
-                if (testBlock[i][0] > rightX) {
-                    rightX = testBlock[i][0];
-                }
-            }
-            while (leftX < 0) {
-                this.moveRight();
-                leftX++;
-            }
-            while (rightX > 9) {
-                this.moveLeft();
-                rightX--;
-            }
-        },
-        moveTop: function() {
+        moveUp: function() {
             for (var i in block) {
                 for (var j = 0; j < block[i].length; j++) {
                     block[i][j][1]--;
@@ -180,7 +86,7 @@ var Items = function(num) {
             }
             this.crushChk(1);
         },
-        moveBottom: function() {
+        moveDown: function() {
             for (var i in block) {
                 for (var j = 0; j < block[i].length; j++) {
                     block[i][j][1]++;
@@ -190,7 +96,101 @@ var Items = function(num) {
         },
         moveEnd: function() {
             while (bottomFlag) {
-                this.moveBottom();
+                this.moveDown();
+            }
+        },
+        crushChk: function(direction) {
+            var testBlock = block[blockDirection];
+            var bottomY = testBlock[testBlock.length - 1][1];
+            var leftX;
+            var rightX;
+            for (var i = 0; i < testBlock.length; i++) {
+                if (i == 0) {
+                    leftX = testBlock[i][0];
+                    rightX = testBlock[i][0];
+                    continue;
+                }
+                if (testBlock[i][0] < leftX) {
+                    leftX = testBlock[i][0];
+                }
+                if (testBlock[i][0] > rightX) {
+                    rightX = testBlock[i][0];
+                }
+            }
+            if (leftX < 0) {
+                this.moveRight();
+                return false;
+            } else if (rightX > 9) {
+                this.moveLeft();
+                return false;
+            } else if (bottomY > 19) {
+                this.moveUp();
+                bottomFlag = false;
+                endPosition();
+                return false;
+            }
+            for (var i = 0; i < testBlock.length; i++) {
+                for (var j in fixItem) {
+                    /* 겹침 */
+                    if (testBlock[i][0] == fixItem[j][0] && testBlock[i][1] == fixItem[j][1]) {
+                        if (direction == 0) {
+                            this.moveRight();
+                        }
+                        if (direction == 1) {
+                            this.moveLeft();
+                        }
+                        if (direction == 2) {
+                            this.moveUp();
+                            bottomFlag = false;
+                            endPosition();
+                        }
+                        return false;
+                    }
+                }
+            }
+        },
+        rotate: function() {
+            blockDirection++;
+            if (blockDirection == 4) {
+                blockDirection = 0;
+            }
+            var testBlock = this.getCurrentBlock();
+            /* 회전시 충돌있으면 회전하기 전으로 돌리기 */
+            for (var i = 0; i < testBlock.length; i++) {
+                for (var j in fixItem) {
+                    /* 겹침 */
+                    if (testBlock[i][0] == fixItem[j][0] && testBlock[i][1] == fixItem[j][1]) {
+                        blockDirection--;
+                        if (blockDirection == -1) {
+                            blockDirection = 3;
+                        }
+                        return false;
+                    }
+                }
+            }
+            //회전시 위치 조정
+            var leftX;
+            var rightX;
+            for (var i = 0; i < testBlock.length; i++) {
+                if (i == 0) {
+                    leftX = testBlock[i][0];
+                    rightX = testBlock[i][0];
+                    continue;
+                }
+                if (testBlock[i][0] < leftX) {
+                    leftX = testBlock[i][0];
+                }
+                if (testBlock[i][0] > rightX) {
+                    rightX = testBlock[i][0];
+                }
+            }
+            while (leftX < 0) {
+                this.moveRight();
+                leftX++;
+            }
+            while (rightX > 9) {
+                this.moveLeft();
+                rightX--;
             }
         }
     };
